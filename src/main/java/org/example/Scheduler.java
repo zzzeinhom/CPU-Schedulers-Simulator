@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Scheduler {
-    protected List<Process> ganttChart = new ArrayList<>();
+    protected List<QuantumProcess> ganttChart = new ArrayList<>();
 
-    public abstract List<Process> run(List<Process> process);
+    public static List<QuantumProcess> run(List<QuantumProcess> process) {
+        return null;
+    }
 }

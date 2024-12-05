@@ -14,6 +14,7 @@ public class Process implements Comparable<Process> {
         this.name = name;
         this.arrivalTime = arrivalTime;
         this.burstTime = burstTime;
+        this.remainingBurstTime = burstTime;
         this.priority = priority;
     }
 
