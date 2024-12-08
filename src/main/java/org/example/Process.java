@@ -9,6 +9,7 @@ public class Process implements Comparable<Process> {
     private int completionTime;
     private int turnAroundTime;
     private int waitingTime;
+    private int queueEntryTime;
 
     public Process(String name, int arrivalTime, int burstTime, int priority) {
         this.name = name;
@@ -16,6 +17,15 @@ public class Process implements Comparable<Process> {
         this.burstTime = burstTime;
         this.remainingBurstTime = burstTime;
         this.priority = priority;
+
+    }
+
+    public int getQueueEntryTime() {
+        return queueEntryTime;
+    }
+
+    public void setQueueEntryTime(int queueEntryTime) {
+        this.queueEntryTime = queueEntryTime;
     }
 
     public String getName() {
