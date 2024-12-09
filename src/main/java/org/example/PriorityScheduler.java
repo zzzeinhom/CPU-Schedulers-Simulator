@@ -1,5 +1,6 @@
 package org.example;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -9,6 +10,9 @@ public class PriorityScheduler extends Scheduler {
     public PriorityScheduler(int contextSwitch) {
         this.contextSwitch = contextSwitch;
     }
+
+    List<Process> ganttChartPR = new ArrayList<>();
+
 
     @Override
     public List<Process> run(List<Process> processes) {
@@ -28,6 +32,7 @@ public class PriorityScheduler extends Scheduler {
             ++idx;
             Process p = readyQueue.poll();
             p.setCompletionTime(currentTime + p.getBurstTime());
+            ganttChartPR.add(p);
             p.setTurnAroundTime(p.getCompletionTime() - p.getArrivalTime());
             p.setWaitingTime(p.getTurnAroundTime() - p.getBurstTime());
             totTurnAround += p.getTurnAroundTime();

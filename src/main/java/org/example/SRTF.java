@@ -1,18 +1,23 @@
 package org.example;
 
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.PriorityQueue;
+import javafx.scene.paint.Color;
 
+import java.util.*;
+
+import org.example.CPUSchedulerGUI.ExecutionSegment; // Import ExecutionSegment from your GUI class
+import javafx.scene.paint.Color; // Import Color for process visualization
 
 public class SRTF extends Scheduler {
     private int contextSwitch;
     private static final int MX_WAITING = 10;
     private static final int INF = 1000000000;
+
     public SRTF(int contextSwitch) {
         this.contextSwitch = contextSwitch;
     }
+
+    List<Process> ganttChartSRTF = new ArrayList<>();
+
 
     @Override
     public List<Process> run(List<Process> processes) {
@@ -50,7 +55,7 @@ public class SRTF extends Scheduler {
                 }
             }
             Process p;
-            if(starving) p = starvingProcess;
+            if (starving) p = starvingProcess;
             else p = readyQueue.poll();
 
 
@@ -67,6 +72,7 @@ public class SRTF extends Scheduler {
                 p.setWaitingTime(p.getTurnAroundTime() - p.getBurstTime());
                 totTurnAround += p.getTurnAroundTime();
                 totWaiting += p.getWaitingTime();
+                ganttChartSRTF.add(p);
                 System.out.println(p.getName());
                 System.out.printf("Process execution order: %d\nWaiting Time: %d\nTurnaround Time: %d\n\n",
                         order++, p.getWaitingTime(), p.getTurnAroundTime());
@@ -85,5 +91,32 @@ public class SRTF extends Scheduler {
         System.out.printf("Average Waiting Time: %.2f\nAverage Turnaround Time: %.2f\n",
                 avgWaitingTime, avgTurnaroundTime);
         return processes;
+    }
+
+    public List<CPUSchedulerGUI.ExecutionSegment> getGanttChartSRTF() {
+        List<CPUSchedulerGUI.ExecutionSegment> timeline = new ArrayList<>();
+        for (Process p : ganttChartSRTF) {
+            timeline.add(new CPUSchedulerGUI.ExecutionSegment(
+                    p.getName(),
+                    p.getBurstTime(),
+                    getColorForProcess(p.getName())
+            ));
+        }
+        return timeline;
+    }
+
+    private Color getColorForProcess(String processName) {
+        switch (processName) {
+            case "P1":
+                return Color.RED;
+            case "P2":
+                return Color.BLUE;
+            case "P3":
+                return Color.GREEN;
+            case "P4":
+                return Color.YELLOW;
+            default:
+                return Color.GRAY; // Default color for unrecognized processes
+        }
     }
 }
