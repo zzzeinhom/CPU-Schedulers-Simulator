@@ -174,23 +174,32 @@ public class CPUSchedulerGUI extends Application {
     private List<Process> getMockProcesses() {
         //this is what shows at the sidebar thing
         return List.of(
-                new Process("P1", 0, 5, 2),
-                new Process("P2", 1, 3, 1),
-                new Process("P3", 2, 7, 3),
-                new Process("P4", 3, 2, 4)
-
+                new Process("P1", 1, 10, 1),
+                new Process("P2", 1, 1, 1),
+                new Process("P3", 1, 2, 1),
+                new Process("P4", 1, 3, 1)
         );
     }
 
     public static void main(String[] args) {
-        // Put real data here:
-        setExecutionTimeline(List.of(
-                new ExecutionSegment("P1", 5, Color.RED),
-                new ExecutionSegment("P2", 5, Color.BLUE),
-                new ExecutionSegment("P3", 5, Color.GREEN),
-                new ExecutionSegment("P4", 5, Color.YELLOW)
-        ));
+        // Define processes (replace with dynamic input later)
+        List<Process> processes = List.of(
+                new Process("P1", 1, 10, 1),
+                new Process("P2", 1, 1, 1),
+                new Process("P3", 1, 2, 1),
+                new Process("P4", 1, 3, 1)
+        );
 
+        // Run SJF scheduling
+        SJF sjf = new SJF();
+        sjf.run(processes);
+
+        // Get the Gantt chart data
+        List<ExecutionSegment> timeline = sjf.getGanttChart();
+        CPUSchedulerGUI.setExecutionTimeline(timeline);
+
+        // Launch GUI
         launch(args);
     }
+
 }

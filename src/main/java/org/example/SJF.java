@@ -2,6 +2,11 @@ package org.example;
 
 import java.util.*;
 
+
+
+import org.example.CPUSchedulerGUI.ExecutionSegment; // Import ExecutionSegment from your GUI class
+import javafx.scene.paint.Color; // Import Color for process visualization
+
 public class SJF extends Scheduler {
 
     public SJF() {
@@ -77,4 +82,26 @@ public class SJF extends Scheduler {
         System.out.println("\nAverage Waiting Time: " + (double) totalWaitingTime / ganttChartSJF.size());
         System.out.println("Average Turnaround Time: " + (double) totalTurnAroundTime / ganttChartSJF.size());
     }
+    public List<ExecutionSegment> getGanttChart() {
+        List<ExecutionSegment> timeline = new ArrayList<>();
+        for (Process p : ganttChartSJF) {
+            timeline.add(new ExecutionSegment(
+                    p.getName(),
+                    p.getBurstTime(),
+                    getColorForProcess(p.getName())
+            ));
+        }
+        return timeline;
+    }
+    private Color getColorForProcess(String processName) {
+        switch (processName) {
+            case "P1": return Color.RED;
+            case "P2": return Color.BLUE;
+            case "P3": return Color.GREEN;
+            case "P4": return Color.YELLOW;
+            default: return Color.GRAY; // Default color for unrecognized processes
+        }
+    }
+
+
 }

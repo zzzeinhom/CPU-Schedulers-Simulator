@@ -1,4 +1,5 @@
 package org.example;
+import javafx.scene.paint.Color; //for color
 
 public class Process implements Comparable<Process> {
     private final String name;
@@ -12,15 +13,16 @@ public class Process implements Comparable<Process> {
     private int queueEntryTime;
     private double effectiveBurstTime;
 
+    //private Color color;
 
-    public Process(String name, int arrivalTime, int burstTime, int priority) {
+    public Process(String name, int arrivalTime, int burstTime, int priority/*, Color color*/) {
         this.name = name;
         this.arrivalTime = arrivalTime;
         this.burstTime = burstTime;
         this.remainingBurstTime = burstTime;
         this.priority = priority;
         this.effectiveBurstTime = burstTime;
-
+        //this.color = color;
     }
 
     public int getQueueEntryTime() {
