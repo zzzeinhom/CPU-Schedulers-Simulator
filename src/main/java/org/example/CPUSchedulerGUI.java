@@ -8,6 +8,14 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
+
+
 import java.util.List;
 
 public class CPUSchedulerGUI extends Application {
@@ -22,16 +30,20 @@ public class CPUSchedulerGUI extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("CPU Scheduling Visualization");
 
-        // Canvas dimensions
+        // Canvas for Gantt Chart
         int canvasWidth = 800;
         int canvasHeight = 400;
         Canvas canvas = new Canvas(canvasWidth, canvasHeight);
         GraphicsContext gc = canvas.getGraphicsContext2D();
-
         drawGanttChart(gc, canvasWidth, canvasHeight);
 
-        VBox root = new VBox(canvas);
-        Scene scene = new Scene(root);
+        // Process Information Table
+        List<Process> processes = getMockProcesses(); // Replace with actual processes
+        TableView<Process> processTable = createProcessTable(processes);
+
+        // Combine Gantt chart and table
+        HBox root = new HBox(10, canvas, processTable);
+        Scene scene = new Scene(root, 1000, 500);
 
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -92,6 +104,46 @@ public class CPUSchedulerGUI extends Application {
         gc.strokeRect(0, canvasHeight / 2 - blockHeight / 2, canvasWidth, blockHeight);
     }
 
+    private TableView<Process> createProcessTable(List<Process> processes) {
+        TableView<Process> table = new TableView<>();
+
+        // Handle null or empty process list
+        if (processes == null || processes.isEmpty()) {
+            System.out.println("No processes to display in the table.");
+            return table; // Return an empty table
+        }
+
+        // Define columns
+        TableColumn<Process, String> nameCol = new TableColumn<>("Name");
+        nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+
+        TableColumn<Process, Integer> arrivalTimeCol = new TableColumn<>("Arrival Time");
+        arrivalTimeCol.setCellValueFactory(new PropertyValueFactory<>("arrivalTime"));
+
+        TableColumn<Process, Integer> burstTimeCol = new TableColumn<>("Burst Time");
+        burstTimeCol.setCellValueFactory(new PropertyValueFactory<>("burstTime"));
+
+        TableColumn<Process, Integer> priorityCol = new TableColumn<>("Priority");
+        priorityCol.setCellValueFactory(new PropertyValueFactory<>("priority"));
+
+        nameCol.setPrefWidth(100);
+        arrivalTimeCol.setPrefWidth(120);
+        burstTimeCol.setPrefWidth(100);
+        priorityCol.setPrefWidth(100);
+
+        table.getColumns().addAll(nameCol, arrivalTimeCol, burstTimeCol, priorityCol);
+
+        // Populate Table with Process Data
+        table.getItems().addAll(processes);
+
+        table.setStyle("-fx-font-size: 14; -fx-padding: 10;");
+
+
+        return table;
+    }
+
+
+
 
 
 
@@ -119,14 +171,24 @@ public class CPUSchedulerGUI extends Application {
             return color;
         }
     }
+    private List<Process> getMockProcesses() {
+        //this is what shows at the sidebar thing
+        return List.of(
+                new Process("P1", 0, 5, 2),
+                new Process("P2", 1, 3, 1),
+                new Process("P3", 2, 7, 3),
+                new Process("P4", 3, 2, 4)
+
+        );
+    }
 
     public static void main(String[] args) {
-        // Example data
+        // Put real data here:
         setExecutionTimeline(List.of(
                 new ExecutionSegment("P1", 5, Color.RED),
-                new ExecutionSegment("P2", 3, Color.BLUE),
-                new ExecutionSegment("P3", 7, Color.GREEN),
-                new ExecutionSegment("P4", 2, Color.YELLOW)
+                new ExecutionSegment("P2", 5, Color.BLUE),
+                new ExecutionSegment("P3", 5, Color.GREEN),
+                new ExecutionSegment("P4", 5, Color.YELLOW)
         ));
 
         launch(args);
