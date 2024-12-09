@@ -14,6 +14,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import java.io.IOException;
 
 
 import java.util.List;
@@ -180,26 +181,29 @@ public class CPUSchedulerGUI extends Application {
                 new Process("P4", 1, 3, 1)
         );
     }
+    //        // Define processes (replace with dynamic input later)
+//        List<Process> processes = List.of(
+//                new Process("P1", 1, 10, 1),
+//                new Process("P2", 1, 1, 1),
+//                new Process("P3", 1, 2, 1),
+//                new Process("P4", 1, 3, 1)
+//        );
+    public static void main(String[] args) throws IOException {
+        // Load processes from input file
+        String fileName = "input.txt"; // Ensure this file exists in your project directory
+        List<Process> processes = InputHandler.getProcessesFromFile(fileName);
 
-    public static void main(String[] args) {
-        // Define processes (replace with dynamic input later)
-        List<Process> processes = List.of(
-                new Process("P1", 1, 10, 1),
-                new Process("P2", 1, 1, 1),
-                new Process("P3", 1, 2, 1),
-                new Process("P4", 1, 3, 1)
-        );
-
-        // Run SJF scheduling
+        // Example: Run SJF Scheduling
         SJF sjf = new SJF();
         sjf.run(processes);
 
-        // Get the Gantt chart data
+        // Get the Gantt Chart and pass to the GUI
         List<ExecutionSegment> timeline = sjf.getGanttChart();
         CPUSchedulerGUI.setExecutionTimeline(timeline);
 
-        // Launch GUI
+        // Launch the GUI
         launch(args);
     }
+
 
 }

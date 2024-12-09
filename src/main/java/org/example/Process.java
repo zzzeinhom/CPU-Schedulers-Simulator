@@ -13,16 +13,21 @@ public class Process implements Comparable<Process> {
     private int queueEntryTime;
     private double effectiveBurstTime;
 
-    //private Color color;
+    private Color color;
 
-    public Process(String name, int arrivalTime, int burstTime, int priority/*, Color color*/) {
+    public Process(String name, int arrivalTime, int burstTime, int priority, Color color) {
         this.name = name;
         this.arrivalTime = arrivalTime;
         this.burstTime = burstTime;
         this.remainingBurstTime = burstTime;
         this.priority = priority;
         this.effectiveBurstTime = burstTime;
-        //this.color = color;
+        this.color = color;
+    }
+
+        //for backward compatibility
+    public Process(String name, int arrivalTime, int burstTime, int priority) {
+        this(name, arrivalTime, burstTime, priority, Color.GRAY); // Default color is gray
     }
 
     public int getQueueEntryTime() {
@@ -84,6 +89,12 @@ public class Process implements Comparable<Process> {
         return effectiveBurstTime;
     }
 
+    public void setColor(Color color) {
+        this.color = color;
+    }
+    public Color getColor() {
+        return color;
+    }
 
     @Override
     public int compareTo(Process other) {
