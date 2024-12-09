@@ -2,7 +2,13 @@ package org.example;
 
 import java.util.*;
 
+import javafx.util.Pair;
+import org.example.CPUSchedulerGUI.ExecutionSegment; // Import ExecutionSegment from your GUI class
+import javafx.scene.paint.Color; // Import Color for process visualization
+
+
 public class FCAI {
+    private static List<Pair<Process, Integer>> gnattChart = new ArrayList<>();
 
     // Helper method to calculate V1
     private static double calculateV1(List<QuantumProcess> processes) {
@@ -21,7 +27,8 @@ public class FCAI {
                 (process.getRemainingBurstTime() / V2);
     }
 
-    public static void run(List<QuantumProcess> processes) {
+    public static List<Pair<Process,Integer>> run(List<QuantumProcess> processes) {
+        gnattChart.clear();
         double V1 = calculateV1(processes);
         double V2 = calculateV2(processes);
         List<QuantumProcess> completedProcesses = new ArrayList<>();
@@ -86,6 +93,8 @@ public class FCAI {
                 currentProcess.setTurnAroundTime(currentTime - currentProcess.getArrivalTime());
                 currentProcess.setWaitingTime(currentProcess.getTurnAroundTime() - currentProcess.getBurstTime());
                 completedProcesses.add(currentProcess);
+                Pair<Process,Integer> p = new Pair<>(currentProcess, currentTime-logTime);
+                gnattChart.add(p);
                 // This flag is set to let the next in queue to execute non-preemptively
                 WillEnterNonPreemptive = true;
                 debug(logTime, currentTime, currentProcess);
@@ -107,6 +116,8 @@ public class FCAI {
 
                 // re-add to queue
                 queue.add(currentProcess);
+                Pair<Process,Integer> p = new Pair<>(currentProcess, currentTime-logTime);
+                gnattChart.add(p);
                 debug(logTime, currentTime, currentProcess);
                 logTime = currentTime;
             }
@@ -144,12 +155,16 @@ public class FCAI {
 
                     // Mark that it will enter non-preemptive mode
                     WillEnterNonPreemptive = true;
+                    Pair<Process,Integer> p = new Pair<>(currentProcess, currentTime-logTime);
+                    gnattChart.add(p);
                     debug(logTime, currentTime, currentProcess);
                     logTime = currentTime;
                 }
             }
         }  // go to next in queue
         PrintSummary(completedProcesses);
+        System.out.println(gnattChart);
+        return gnattChart;
     }
 
 
@@ -170,22 +185,46 @@ public class FCAI {
     }
 
     private static void debug(int logTime, int currentTime, QuantumProcess currentProcess) {
-        if (currentProcess.getRemainingBurstTime() != 0) {
-            System.out.println("Time: " + logTime + "-" + currentTime +
-                    " | Process: " + currentProcess.getName() +
-                    " | Remaining Burst Time: " + currentProcess.getRemainingBurstTime() +
-                    " | Updated Quantum: " + currentProcess.getQuantum() +
-                    " | Priority: " + currentProcess.getPriority() +
-                    " | Factor: " + currentProcess.getFactor());
-        } else {
-            System.out.println("Time: " + logTime + "-" + currentTime +
-                    " | Process: " + currentProcess.getName() +
-                    " | Remaining Burst Time: " + "COMPLETE!" +
-                    " | Updated Quantum: " + "COMPLETE!" +
-                    " | Priority: " + currentProcess.getPriority() +
-                    " | Factor: " + "COMPLETE!");
+        // Calculate execution time
+        int executionTime = currentTime - logTime;
+
+        // Define the header with the Execution Time column moved before Updated Quantum
+        String header = String.format(
+                "%-15s %-15s %-20s %-15s %-20s %-15s %-15s",
+                "Time", "Process", "Remaining Burst Time", "Execution Time", "Updated Quantum", "Priority", "Factor"
+        );
+
+        // Generate a separator to match the header length
+        String separator = "-".repeat(header.length());
+
+        // Determine the values for the current process
+        String status = currentProcess.getRemainingBurstTime() != 0 ? String.valueOf(currentProcess.getRemainingBurstTime()) : "COMPLETE!";
+        String quantum = currentProcess.getRemainingBurstTime() != 0 ? String.valueOf(currentProcess.getQuantum()) : "COMPLETE!";
+        String factor = currentProcess.getRemainingBurstTime() != 0 ? String.valueOf(currentProcess.getFactor()) : "COMPLETE!";
+
+        // Create a formatted details string
+        String details = String.format(
+                "%-15s %-15s %-20s %-15d %-20s %-15s %-15s",
+                logTime + "-" + currentTime,
+                currentProcess.getName(),
+                status,
+                executionTime,
+                quantum,
+                currentProcess.getPriority(),
+                factor
+        );
+
+        // Print the header and separator only once
+        if (logTime == 0) { // This condition assumes the first call starts at logTime == 0
+            System.out.println(header);
+            System.out.println(separator);
         }
+
+        // Print the details for the current process
+        System.out.println(details);
     }
+
+
 
     private static void PrintSummary(List<QuantumProcess> processes) {
         double SumTAT = 0;
@@ -201,5 +240,16 @@ public class FCAI {
         System.out.println("Average Turnaround Time: " + SumTAT / processes.size());
         System.out.println("Average Waiting Time: " + SumWT / processes.size());
     }
-}
 
+    public List<ExecutionSegment> getGanttChart() {
+        List<ExecutionSegment> timeline = new ArrayList<>();
+        for (Pair<Process,Integer> p : gnattChart) {
+            timeline.add(new ExecutionSegment(
+                    p.getKey().getName(),
+                    p.getValue(),
+                    p.getKey().getColor() // Directly use the color from the Process object
+            ));
+        }
+        return timeline;
+    }
+}

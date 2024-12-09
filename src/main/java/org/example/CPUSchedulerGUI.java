@@ -17,6 +17,7 @@ import javafx.scene.layout.HBox;
 import java.io.IOException;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CPUSchedulerGUI extends Application {
@@ -184,18 +185,23 @@ public class CPUSchedulerGUI extends Application {
 
     public static void main(String[] args) throws IOException {
         // Load processes from input file
+        List<QuantumProcess> qProcesses = new ArrayList<>();
+        qProcesses.add(new QuantumProcess("P1", 0, 17, 4,4,0));
+        qProcesses.add(new QuantumProcess("P2", 3, 6, 9,3,0));
+        qProcesses.add(new QuantumProcess("P3", 4, 10, 3,5,0));
+        qProcesses.add(new QuantumProcess("P4", 29, 4, 10,2,0));
 //        String fileName = "input.txt"; // Ensure this file exists in your project directory
 //        List<Process> processes = InputHandler.getProcessesFromFile(fileName);
 
                 // Define processes (replace with dynamic input later)
-        List<Process> processes = List.of(
-                new Process("P1", 1, 10, 1),
-                new Process("P2", 1, 5, 1),
-                new Process("P3", 1, 5, 1),
-                new Process("P4", 1, 5, 1)
-        );
-
-        // Example: Run SJF Scheduling
+//        List<Process> processes = List.of(
+//                new Process("P1", 1, 10, 1),
+//                new Process("P2", 1, 5, 1),
+//                new Process("P3", 1, 5, 1),
+//                new Process("P4", 1, 5, 1)
+//        );
+//
+//         Example: Run SJF Scheduling
 //        SJF sjf = new SJF();
 //        sjf.run(processes);
 //
@@ -203,14 +209,15 @@ public class CPUSchedulerGUI extends Application {
 //        List<ExecutionSegment> timeline = sjf.getGanttChart();
 //        CPUSchedulerGUI.setExecutionTimeline(timeline);
 
-
+          FCAI fcai = new FCAI();
+          fcai.run(qProcesses);
         // Example: Run SJF Scheduling
-        SRTF srtf = new SRTF(0);
-        SRTF.run(processes);
-
-        // Get the Gantt Chart and pass to the GUI
-        List<ExecutionSegment> timeline = SRTF.getGanttChartSRTF();
-        CPUSchedulerGUI.setExecutionTimeline(timeline);
+//        SRTF srtf = new SRTF(0);
+//        SRTF.run(processes);
+//
+//        // Get the Gantt Chart and pass to the GUI
+//        List<ExecutionSegment> timeline = sjf.getGanttChart();
+//        CPUSchedulerGUI.setExecutionTimeline(timeline);
 
         // Launch the GUI
         launch(args);
