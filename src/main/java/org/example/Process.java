@@ -10,6 +10,8 @@ public class Process implements Comparable<Process> {
     private int turnAroundTime;
     private int waitingTime;
     private int queueEntryTime;
+    private double effectiveBurstTime;
+
 
     public Process(String name, int arrivalTime, int burstTime, int priority) {
         this.name = name;
@@ -17,6 +19,7 @@ public class Process implements Comparable<Process> {
         this.burstTime = burstTime;
         this.remainingBurstTime = burstTime;
         this.priority = priority;
+        this.effectiveBurstTime = burstTime;
 
     }
 
@@ -71,6 +74,14 @@ public class Process implements Comparable<Process> {
     public void setWaitingTime(int waitingTime) {
         this.waitingTime = waitingTime;
     }
+    public void setEffectiveBurstTime() {
+        effectiveBurstTime = Math.max(0, burstTime - waitingTime);
+    }
+
+    public double getEffectiveBurstTime() {
+        return effectiveBurstTime;
+    }
+
 
     @Override
     public int compareTo(Process other) {
