@@ -23,9 +23,8 @@ public class PriorityScheduler extends Scheduler {
         int totWaiting = 0, totTurnAround = 0;
         int numberOfProcesses = processes.size();
         // Processes are sorted on arrival time.
-        processes.sort(Comparator.comparingInt(Process::getArrivalTime));
-        // Initialize readyQueue
-        PriorityQueue<Process> readyQueue = new PriorityQueue<>(Comparator.comparingInt(Process::getPriority));
+        processes.sort(Comparator.comparingInt(Process::getArrivalTime).thenComparingInt(Process::getPriority));        // Initialize readyQueue
+        PriorityQueue<Process> readyQueue = new PriorityQueue<>(Comparator.comparingInt(Process::getArrivalTime).thenComparingInt(Process::getPriority));
 
         readyQueue.add(processes.get(idx));
         while (!readyQueue.isEmpty()) {

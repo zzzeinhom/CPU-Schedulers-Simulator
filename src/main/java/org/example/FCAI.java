@@ -27,7 +27,7 @@ public class FCAI {
                 (process.getRemainingBurstTime() / V2);
     }
 
-    public static List<Pair<Process,Integer>> run(List<QuantumProcess> processes) {
+    public  List<Pair<Process,Integer>> run(List<QuantumProcess> processes) {
         gnattChart.clear();
         double V1 = calculateV1(processes);
         double V2 = calculateV2(processes);
