@@ -20,7 +20,8 @@ public class SRTF extends Scheduler {
 
 
     @Override
-    public List<Process> run(List<Process> processes) {
+    public List<Process> run(List<Process> listOfProcesses) {
+        List<Process> processes = new ArrayList<>(listOfProcesses);
         int order = 1;
         int currentTime = 0;
         int idx = 0;
@@ -90,7 +91,7 @@ public class SRTF extends Scheduler {
         double avgTurnaroundTime = 1.0 * totTurnAround / numberOfProcesses;
         System.out.printf("Average Waiting Time: %.2f\nAverage Turnaround Time: %.2f\n",
                 avgWaitingTime, avgTurnaroundTime);
-        return processes;
+        return ganttChartSRTF;
     }
 
     public List<CPUSchedulerGUI.ExecutionSegment> getGanttChartSRTF() {
@@ -99,7 +100,7 @@ public class SRTF extends Scheduler {
             timeline.add(new CPUSchedulerGUI.ExecutionSegment(
                     p.getName(),
                     p.getBurstTime(),
-                    getColorForProcess(p.getName())
+                    p.getColor()
             ));
         }
         return timeline;

@@ -188,29 +188,32 @@ public class CPUSchedulerGUI extends Application {
 //        List<Process> processes = InputHandler.getProcessesFromFile(fileName);
 
                 // Define processes (replace with dynamic input later)
-        List<Process> processes = List.of(
+        /*List<Process> processes = List.of(
                 new Process("P1", 1, 10, 1),
                 new Process("P2", 1, 5, 1),
                 new Process("P3", 1, 5, 1),
                 new Process("P4", 1, 5, 1)
-        );
+        );*/
 
-        // Example: Run SJF Scheduling
-//        SJF sjf = new SJF();
-//        sjf.run(processes);
-//
-//        // Get the Gantt Chart and pass to the GUI
-//        List<ExecutionSegment> timeline = sjf.getGanttChart();
-//        CPUSchedulerGUI.setExecutionTimeline(timeline);
+        List<Process> processes = InputHandler.getProcessesFromUser();
 
 
         // Example: Run SJF Scheduling
-        SRTF srtf = new SRTF(0);
-        SRTF.run(processes);
+        SJF sjf = new SJF();
+        sjf.run(processes);
 
         // Get the Gantt Chart and pass to the GUI
-        List<ExecutionSegment> timeline = SRTF.getGanttChartSRTF();
+        List<ExecutionSegment> timeline = sjf.getGanttChart();
         CPUSchedulerGUI.setExecutionTimeline(timeline);
+
+
+//        // Example: Run SRTF Scheduling
+//        SRTF srtf = new SRTF(0);
+//        SRTF.run(processes);
+//
+//        // Get the Gantt Chart and pass to the GUI
+//        List<ExecutionSegment> timeline = SRTF.getGanttChartSRTF();
+//        CPUSchedulerGUI.setExecutionTimeline(timeline);
 
         // Launch the GUI
         launch(args);

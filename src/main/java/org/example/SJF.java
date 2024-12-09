@@ -88,12 +88,12 @@ public class SJF extends Scheduler {
             timeline.add(new ExecutionSegment(
                     p.getName(),
                     p.getBurstTime(),
-                    getColorForProcess(p.getName())
+                    p.getColor() // Directly use the color from the Process object
             ));
         }
         return timeline;
     }
-    private Color getColorForProcess(String processName) {
+    /*private Color getColorForProcess(String processName) {
         switch (processName) {
             case "P1": return Color.RED;
             case "P2": return Color.BLUE;
@@ -101,7 +101,7 @@ public class SJF extends Scheduler {
             case "P4": return Color.YELLOW;
             default: return Color.GRAY; // Default color for unrecognized processes
         }
-    }
+    }*/
 
 
 }
